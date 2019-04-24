@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserMapper</title>
+    <link rel="stylesheet" href="/resources/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/resources/layui/layui-ext/dtree/dtree.css">
+    <link rel="stylesheet" href="/resources/layui/layui-ext/dtree/font/dtreefont.css">
+</head>
+<body>
+<table id="userTable" lay-filter="userTable"></table>
+
+<!--toolbar开始-->
+<div id="tableToolbar" style="display: none;">
+    <button type="button" class="layui-btn" lay-event="add">添加</button>
+    <button type="button" class="layui-btn layui-btn-danger" lay-event="batchDelete">批量删除</button>
+</div>
+<div id="cellToolbar" style="display: none;">
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-xs" lay-event="update">修改</button>
+    <button type="button"  class="layui-btn layui-btn-danger layui-btn-sm layui-btn-xs" lay-event="delete">删除</button>
+    <button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-xs" lay-event="resetUserPwd">重置密码</button>
+    <button type="button"  class="layui-btn layui-btn-sm layui-btn-xs" lay-event="dispatcherUserRole">分配角色</button>
+</div>
+<!--toolbar结束-->
+
+</body>
+<script src="/resources/layui/layui.js"></script>
+<script>
+    var tableIns;
+    layui.extend({
+        dtree: '/resources/layui/layui-ext/dtree/dtree'
+    }).use(['table', 'form', 'jquery', 'dtree', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var dtree = layui.dtree;
+        //第一个实例
+        tableIns = table.render({
+            elem: '#userTable'
+            , height: 312
+            , url: '/user/loadAllUser' //数据接口
+            , page: true //开启分页
+            , toolbar: "#tableToolbar"
+            , cols: [
+                [ //表头
+                    {width: 80, type: 'checkbox'}
+                    , {field: 'id', title: 'ID', width: 80}
+                    , {field: 'name', title: '用户姓名', width: 100}
+                    , {field: 'loginname', title: '登录名称', width: 100}
+                    , {field: 'deptname', title: '登录名称', width: 100}
+                    , {field: 'leadername', title: '直接领导', width: 100}
+                    , {field: 'hiredate', title: '入职时间', width: 100}
+                    , {
+                    field: 'sex', title: '性别', width: 100, templet: function (data) {
+                        return data.sex == 1 ? '男' : '女';
+                    }
+                },
+                    {
+                        field: 'available', title: '是否可用', width: 100, templet: function (data) {
+                            return data.available == 1 ? '可用' : '不可用';
+                        }
+                    }
+                    , {field: 'remark', title: '备注', width: 100}
+                    , {field: 'ordernum', title: '排序号', width: 100}
+                    , {field: 'address', title: '用户地址', width: 100}
+                    , {
+                    field: 'imgpath', title: '头像', width: 130, templet: function (data) {
+                        return "<img width='30' height='30' src='" + data.imgpath + "'>";
+                    }
+                }
+                    , {title: '操作', width: 300, fixed: 'right', align: 'center', toolbar: '#cellToolbar'}
+                ]
+            ]
+        });
+    });
+</script>
+</html>
